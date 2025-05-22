@@ -1,13 +1,15 @@
 <template>
-  <div class="container">
-    <div class="header-row">
-      <h1>רשימת אנשי קשר</h1>
-      <button class="add-button" @click="openAddForm">➕ הוסף איש קשר</button>
+  <div class="page-wrapper">
+    <div class="container">
+      <div class="header-row">
+        <h1>רשימת אנשי קשר</h1>
+        <button class="add-button" @click="openAddForm">➕ הוסף איש קשר</button>
+      </div>
+
+      <ContactsTable :contacts="contacts" @edit="openEditForm" @delete="deleteContact" />
+
+      <ContactForm v-if="showForm" :contact="selectedContact" @close="closeForm" @saved="handleSaved" />
     </div>
-
-    <ContactsTable :contacts="contacts" @edit="openEditForm" @delete="deleteContact" />
-
-    <ContactForm v-if="showForm" :contact="selectedContact" @close="closeForm" @saved="handleSaved" />
   </div>
 </template>
 
@@ -48,20 +50,39 @@ export default {
     async deleteContact(id) {
       await deleteContactById(id);
       await this.fetchContacts();
-    }
+    },
   },
   mounted() {
     this.fetchContacts();
-  }
+  },
 };
 </script>
+
 <style scoped>
+.page-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  /* דוחף את התוכן לימין */
+  direction: rtl;
+  /* חשובה ל-RTL */
+  width: 100vw;
+  /* רוחב כל המסך */
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+  /* גובה מינימום למלא את המסך */
+}
+
 .container {
   max-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
+  box-sizing: border-box;
+  text-align: right;
+  /* יישור טקסט לימין */
   direction: rtl;
+  font-family: 'Arial', sans-serif;
 }
 
 .header-row {
