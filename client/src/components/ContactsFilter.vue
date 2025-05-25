@@ -1,4 +1,3 @@
-<!-- components/ContactsFilter.vue -->
 <template>
   <div class="filter-wrapper">
     <input
@@ -28,19 +27,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.filter-wrapper {
-  margin-bottom: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  direction: rtl;
-  text-align: right;
-}
-</style>

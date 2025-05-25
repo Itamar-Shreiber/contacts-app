@@ -16,17 +16,21 @@
         </div>
       </div>
 
-      <ContactsTable
-        :contacts="filteredContacts"
-        @edit="openEditForm"
-        @delete="deleteContact"
-      />
-      <ContactForm
-        v-if="showForm"
-        :contact="selectedContact"
-        @close="closeForm"
-        @saved="handleSaved"
-      />
+      <div class="contacts-table-wrapper">
+        <ContactsTable
+          :contacts="filteredContacts"
+          @edit="openEditForm"
+          @delete="deleteContact"
+        />
+      </div>
+
+      <div v-if="showForm" class="contact-form-wrapper">
+        <ContactForm
+          :contact="selectedContact"
+          @close="closeForm"
+          @saved="handleSaved"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -46,7 +50,7 @@ export default {
       showForm: false,
       selectedContact: null,
       isSorted: false,
-      currentQuery: '', // 🆕 נשמור את החיפוש הנוכחי
+      currentQuery: '',
     };
   },
   methods: {
@@ -91,7 +95,7 @@ export default {
       this.filteredContacts = filtered;
     },
     clearFilter() {
-      this.$refs.filterComp.clear(); // 🆕 מנקה את ה־input
+      this.$refs.filterComp.clear();
       this.currentQuery = '';
       this.filteredContacts = this.isSorted
         ? this.sortContacts([...this.contacts])
@@ -127,78 +131,60 @@ export default {
 
 <style scoped>
 .page-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  direction: rtl;
-  width: 100vw;
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-  min-height: 100vh;
+  padding: 2rem 1rem; /* רווח פנימי כללי לעמוד */
 }
 
 .container {
-  max-width: 1000px;
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-  text-align: right;
-  direction: rtl;
-  font-family: 'Arial', sans-serif;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+/* רווח אנכי בין השורות והאזורים */
+.header-row,
+.filter-row,
+.contacts-table-wrapper,
+.contact-form-wrapper {
+  margin-bottom: 2rem; /* 32px רווח אנכי */
 }
 
-h1 {
-  margin: 0;
-  color: #4caf50;
-}
-
+/* עיצוב כפתור ההוספה */
 .add-button {
-  background-color: #4caf50;
+  background-color: var(--color-primary, #4caf50);
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 0.5em 1em;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  margin-left: 1rem;
 }
 
 .add-button:hover {
-  background-color: #388e3c;
+  background-color: var(--color-primary-dark, #388e3c);
 }
 
-.filter-row {
-  margin-bottom: 20px;
-  direction: rtl;
-}
-
+/* עיצוב כפתורי סינון ומיון */
 .filter-actions {
-  margin-top: 10px;
+  margin-top: 0.5rem;
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 
 .clear-button,
 .sort-button {
-  padding: 8px 16px;
-  font-size: 14px;
+  background-color: var(--color-primary, #4caf50);
+  color: white;
   border: none;
+  padding: 0.4em 0.8em;
   border-radius: 6px;
   cursor: pointer;
-  background-color: #e0e0e0;
-  color: #333;
-  transition: background-color 0.3s ease;
+  font-size: 0.9rem;
+  transition: background-color 0.3s;
 }
 
 .clear-button:hover,
 .sort-button:hover {
-  background-color: #ccc;
+  background-color: var(--color-primary-dark, #388e3c);
 }
 </style>
