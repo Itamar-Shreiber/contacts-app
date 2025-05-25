@@ -7,11 +7,26 @@
       </div>
 
       <div class="filter-row">
-        <ContactsFilter @filter="handleFilter" />
+        <ContactsFilter ref="filterComp" @filter="handleFilter" />
+        <div class="filter-actions">
+          <button @click="clearFilter" class="clear-button">🧹 נקה חיפוש</button>
+          <button @click="toggleSort" class="sort-button">
+            {{ isSorted ? '🔽 בטל מיון' : '🔼 מיין לפי שם' }}
+          </button>
+        </div>
       </div>
 
-      <ContactsTable :contacts="filteredContacts" @edit="openEditForm" @delete="deleteContact" />
-      <ContactForm v-if="showForm" :contact="selectedContact" @close="closeForm" @saved="handleSaved" />
+      <ContactsTable
+        :contacts="filteredContacts"
+        @edit="openEditForm"
+        @delete="deleteContact"
+      />
+      <ContactForm
+        v-if="showForm"
+        :contact="selectedContact"
+        @close="closeForm"
+        @saved="handleSaved"
+      />
     </div>
   </div>
 </template>
@@ -30,6 +45,8 @@ export default {
       filteredContacts: [],
       showForm: false,
       selectedContact: null,
+      isSorted: false,
+      currentQuery: '', // 🆕 נשמור את החיפוש הנוכחי
     };
   },
   methods: {
@@ -59,12 +76,47 @@ export default {
       await this.fetchContacts();
     },
     handleFilter(query) {
+      this.currentQuery = query;
       const q = query.toLowerCase();
-      this.filteredContacts = this.contacts.filter(c =>
+      let filtered = this.contacts.filter(c =>
         `${c.first_name} ${c.last_name}`.toLowerCase().includes(q) ||
         (c.email && c.email.toLowerCase().includes(q)) ||
         (c.phone && c.phone.includes(q))
       );
+
+      if (this.isSorted) {
+        filtered = this.sortContacts(filtered);
+      }
+
+      this.filteredContacts = filtered;
+    },
+    clearFilter() {
+      this.$refs.filterComp.clear(); // 🆕 מנקה את ה־input
+      this.currentQuery = '';
+      this.filteredContacts = this.isSorted
+        ? this.sortContacts([...this.contacts])
+        : [...this.contacts];
+    },
+    toggleSort() {
+      this.isSorted = !this.isSorted;
+      const baseList = this.currentQuery
+        ? this.contacts.filter(c =>
+            `${c.first_name} ${c.last_name}`.toLowerCase().includes(this.currentQuery.toLowerCase()) ||
+            (c.email && c.email.toLowerCase().includes(this.currentQuery.toLowerCase())) ||
+            (c.phone && c.phone.includes(this.currentQuery))
+          )
+        : [...this.contacts];
+
+      this.filteredContacts = this.isSorted
+        ? this.sortContacts(baseList)
+        : baseList;
+    },
+    sortContacts(list) {
+      return [...list].sort((a, b) => {
+        const nameA = a.first_name?.toLowerCase() || '';
+        const nameB = b.first_name?.toLowerCase() || '';
+        return nameA.localeCompare(nameB);
+      });
     },
   },
   mounted() {
@@ -122,9 +174,31 @@ h1 {
   background-color: #388e3c;
 }
 
-/* 🆕 עיצוב לשורת הפילטר */
 .filter-row {
   margin-bottom: 20px;
   direction: rtl;
+}
+
+.filter-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.clear-button,
+.sort-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #e0e0e0;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.clear-button:hover,
+.sort-button:hover {
+  background-color: #ccc;
 }
 </style>

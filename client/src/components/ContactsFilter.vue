@@ -21,6 +21,10 @@ export default {
     emitFilter() {
       this.$emit('filter', this.query);
     },
+    clear() {
+      this.query = '';
+      this.emitFilter();
+    }
   },
 };
 </script>
