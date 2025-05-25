@@ -18,8 +18,8 @@
         <input id="phone" type="tel" v-model="form.phone" required />
 
         <div class="buttons">
-          <button type="submit" class="btn save">שמור</button>
-          <button type="button" class="btn cancel" @click="$emit('close')">ביטול</button>
+          <button type="submit" class="button button-primary">שמור</button>
+          <button type="button" class="button button-danger" @click="$emit('close')">ביטול</button>
         </div>
       </form>
     </div>

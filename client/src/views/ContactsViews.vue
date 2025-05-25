@@ -24,13 +24,16 @@
         />
       </div>
 
-      <div v-if="showForm" class="contact-form-wrapper">
-        <ContactForm
-          :contact="selectedContact"
-          @close="closeForm"
-          @saved="handleSaved"
-        />
-      </div>
+      <!-- מודל קופץ במקום תצוגה רגילה -->
+        <div v-if="showForm" class="modal-overlay" @click.self="closeForm">
+          <div class="modal-content">
+            <ContactForm
+              :contact="selectedContact"
+              @close="closeForm"
+              @saved="handleSaved"
+            />
+          </div>
+        </div>
     </div>
   </div>
 </template>
@@ -184,4 +187,30 @@ export default {
 .sort-button:hover {
   background-color: var(--color-primary-dark, #388e3c);
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* רקע כהה */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  direction: rtl; /* תמיכה בעברית */
+}
+
 </style>
