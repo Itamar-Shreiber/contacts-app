@@ -3,6 +3,7 @@
     <div class="modal-content">
       <form @submit.prevent="handleSubmit" class="contact-form">
         <h2>{{ contact?.id ? 'ערוך איש קשר' : 'הוסף איש קשר' }}</h2>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
         <label for="first_name">שם פרטי:</label>
         <input id="first_name" v-model="form.first_name" required />
@@ -31,15 +32,16 @@ import { addContact, updateContact } from '../services/contactsApi.js'
 export default {
   props: ['contact'],
   data() {
-    return {
-      form: {
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: ''
-      }
-    }
-  },
+  return {
+    form: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      phone: ''
+    },
+    errorMessage: '' // נוסיף משתנה לשגיאה
+  }
+},
   watch: {
     contact: {
       immediate: true,
@@ -49,15 +51,24 @@ export default {
     }
   },
   methods: {
-    async handleSubmit() {
+  async handleSubmit() {
+    this.errorMessage = ''; // איפוס שגיאה קודמת
+    try {
       if (this.contact?.id) {
         await updateContact(this.contact.id, this.form);
       } else {
         await addContact(this.form);
       }
       this.$emit('saved');
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.message) {
+        this.errorMessage = error.response.data.message;
+      } else {
+        this.errorMessage = 'אירעה שגיאה בלתי צפויה';
+      }
     }
   }
+}
 }
 </script>
 
@@ -145,4 +156,13 @@ export default {
 .btn.cancel:hover {
   background-color: #777;
 }
+
+.error-message {
+  color: red;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
 </style>

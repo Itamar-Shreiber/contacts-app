@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from db import get_connection
+from validation import validate_contact_data
 
 contacts_blueprint = Blueprint('contacts', __name__)
 
@@ -17,12 +18,15 @@ def get_contacts():
 @contacts_blueprint.route('/', methods=['POST'])
 def create_contact():
     data = request.json
+
+    is_valid, error_msg = validate_contact_data(data)
+    if not is_valid:
+        return jsonify({'message': error_msg}), 400
+
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     phone = data.get('phone')
     email = data.get('email')
-
-    print(f"Creating contact - First name: {first_name}, Last name: {last_name}, Phone: {phone}, Email: {email}")
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -33,11 +37,9 @@ def create_contact():
             (first_name, last_name, phone, email)
         )
         conn.commit()
-        print("Insert successful")
         response = jsonify({'message': 'Contact created'})
         response.status_code = 201
     except Exception as e:
-        print(f"Error during insert: {e}")
         response = jsonify({'message': 'Error creating contact', 'error': str(e)})
         response.status_code = 500
     finally:
@@ -46,18 +48,18 @@ def create_contact():
 
     return response
 
-# UPDATE
 @contacts_blueprint.route('/<int:id>', methods=['PUT'])
 def update_contact(id):
     data = request.json
-    print(f"Received update request for contact id: {id}")
-    print(f"Request JSON data: {data}")
+
+    is_valid, error_msg = validate_contact_data(data)
+    if not is_valid:
+        return jsonify({'message': error_msg}), 400
 
     first_name = data.get('first_name')
     last_name = data.get('last_name')
     phone = data.get('phone')
     email = data.get('email')
-    print(f"Updating contact to - First name: {first_name}, Last name: {last_name}, Phone: {phone}, Email: {email}")
 
     conn = get_connection()
     cursor = conn.cursor()
@@ -68,11 +70,9 @@ def update_contact(id):
             (first_name, last_name, phone, email, id)
         )
         conn.commit()
-        print("Update successful")
         response = jsonify({'message': 'Contact updated'})
         response.status_code = 200
     except Exception as e:
-        print(f"Error during update: {e}")
         response = jsonify({'message': 'Error updating contact', 'error': str(e)})
         response.status_code = 500
     finally:
