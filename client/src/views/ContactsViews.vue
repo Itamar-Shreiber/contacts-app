@@ -6,8 +6,11 @@
         <button class="add-button" @click="openAddForm">➕ הוסף איש קשר</button>
       </div>
 
-      <ContactsTable :contacts="contacts" @edit="openEditForm" @delete="deleteContact" />
+      <div class="filter-row">
+        <ContactsFilter @filter="handleFilter" />
+      </div>
 
+      <ContactsTable :contacts="filteredContacts" @edit="openEditForm" @delete="deleteContact" />
       <ContactForm v-if="showForm" :contact="selectedContact" @close="closeForm" @saved="handleSaved" />
     </div>
   </div>
@@ -16,20 +19,24 @@
 <script>
 import ContactsTable from '../components/ContactsTable.vue';
 import ContactForm from '../components/ContactForm.vue';
+import ContactsFilter from '../components/ContactsFilter.vue';
 import { getAllContacts, deleteContactById } from '../services/contactsApi.js';
 
 export default {
-  components: { ContactsTable, ContactForm },
+  components: { ContactsTable, ContactForm, ContactsFilter },
   data() {
     return {
       contacts: [],
+      filteredContacts: [],
       showForm: false,
       selectedContact: null,
     };
   },
   methods: {
     async fetchContacts() {
-      this.contacts = await getAllContacts();
+      const all = await getAllContacts();
+      this.contacts = all;
+      this.filteredContacts = all;
     },
     openAddForm() {
       this.selectedContact = null;
@@ -51,6 +58,14 @@ export default {
       await deleteContactById(id);
       await this.fetchContacts();
     },
+    handleFilter(query) {
+      const q = query.toLowerCase();
+      this.filteredContacts = this.contacts.filter(c =>
+        `${c.first_name} ${c.last_name}`.toLowerCase().includes(q) ||
+        (c.email && c.email.toLowerCase().includes(q)) ||
+        (c.phone && c.phone.includes(q))
+      );
+    },
   },
   mounted() {
     this.fetchContacts();
@@ -62,16 +77,12 @@ export default {
 .page-wrapper {
   display: flex;
   justify-content: flex-end;
-  /* דוחף את התוכן לימין */
   direction: rtl;
-  /* חשובה ל-RTL */
   width: 100vw;
-  /* רוחב כל המסך */
   box-sizing: border-box;
   padding: 0;
   margin: 0;
   min-height: 100vh;
-  /* גובה מינימום למלא את המסך */
 }
 
 .container {
@@ -80,7 +91,6 @@ export default {
   padding: 20px;
   box-sizing: border-box;
   text-align: right;
-  /* יישור טקסט לימין */
   direction: rtl;
   font-family: 'Arial', sans-serif;
 }
@@ -110,5 +120,11 @@ h1 {
 
 .add-button:hover {
   background-color: #388e3c;
+}
+
+/* 🆕 עיצוב לשורת הפילטר */
+.filter-row {
+  margin-bottom: 20px;
+  direction: rtl;
 }
 </style>
