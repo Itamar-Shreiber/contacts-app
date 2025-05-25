@@ -68,15 +68,15 @@ html, body {
 
 body {
   min-height: 100vh;
-  display: flex;             /* מרכז את התוכן */
-  justify-content: center;   /* מרכז אופקית */
-  align-items: center;       /* מרכז אנכית */
-  direction: rtl;            /* זרימה מימין לשמאל */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  direction: rtl;
   color: var(--color-text);
   background-color: var(--color-background);
   font-family: var(--font-base);
   font-size: 15px;
-  line-height: 1.8;          /* ריווח בין שורות מוגדל */
+  line-height: 1.8;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -91,7 +91,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: bold;
   line-height: 1.25;
   margin-top: 1rem;
-  margin-bottom: 1rem;       /* הגדלת ריווח בין כותרות */
+  margin-bottom: 1rem;
 }
 
 p {
@@ -110,19 +110,46 @@ a:hover {
 }
 
 /* כפתורים בסיסיים */
-button {
+.button {
   padding: 0.5em 1em;
   border: none;
-  background-color: var(--color-primary);
-  color: #fff;
-  font-size: 1rem;
   border-radius: var(--border-radius);
   cursor: pointer;
+  font-size: 1rem;
   transition: background-color var(--transition-speed);
+  color: #fff;
 }
 
-button:hover {
+/* כפתור ראשי - ירוק */
+.button-primary {
+  background-color: var(--color-primary);
+}
+.button-primary:hover {
   background-color: var(--color-primary-dark);
+}
+
+/* כפתור משני - כחול */
+.button-secondary {
+  background-color: var(--color-info);
+}
+.button-secondary:hover {
+  background-color: #1976d2;
+}
+
+/* כפתור מסוכן - אדום */
+.button-danger {
+  background-color: var(--color-danger);
+}
+.button-danger:hover {
+  background-color: #c62828;
+}
+
+/* כפתור ניטרלי - אפור */
+.button-default {
+  background-color: #9e9e9e;
+}
+.button-default:hover {
+  background-color: #757575;
 }
 
 /* טפסים */
@@ -149,6 +176,6 @@ input:focus, select:focus, textarea:focus {
   padding: 0 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;       /* רווח אנכי בין אלמנטים */
+  gap: 1.5rem;
   align-items: flex-start;
 }

@@ -3,16 +3,16 @@
     <div class="container">
       <div class="header-row">
         <h1>רשימת אנשי קשר</h1>
-        <button class="add-button" @click="openAddForm">➕ הוסף איש קשר</button>
+        <button class="button button-primary" @click="openAddForm">➕ הוסף איש קשר</button>
       </div>
 
       <div class="filter-row">
         <ContactsFilter ref="filterComp" @filter="handleFilter" />
         <div class="filter-actions">
-          <button @click="clearFilter" class="clear-button">🧹 נקה חיפוש</button>
-          <button @click="toggleSort" class="sort-button">
-            {{ isSorted ? '🔽 בטל מיון' : '🔼 מיין לפי שם' }}
-          </button>
+          <button class="button button-default" @click="clearFilter">🧹 נקה חיפוש</button>
+          <button class="button button-secondary" @click="toggleSort">
+          {{ isSorted ? '🔽 בטל מיון' : '🔼 מיין לפי שם' }}
+        </button>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default {
 
 <style scoped>
 .page-wrapper {
-  padding: 2rem 1rem; /* רווח פנימי כללי לעמוד */
+  padding: 2rem 1rem;
 }
 
 .container {
@@ -139,15 +139,13 @@ export default {
   margin: 0 auto;
 }
 
-/* רווח אנכי בין השורות והאזורים */
 .header-row,
 .filter-row,
 .contacts-table-wrapper,
 .contact-form-wrapper {
-  margin-bottom: 2rem; /* 32px רווח אנכי */
+  margin-bottom: 2rem;
 }
 
-/* עיצוב כפתור ההוספה */
 .add-button {
   background-color: var(--color-primary, #4caf50);
   color: white;
@@ -164,7 +162,6 @@ export default {
   background-color: var(--color-primary-dark, #388e3c);
 }
 
-/* עיצוב כפתורי סינון ומיון */
 .filter-actions {
   margin-top: 0.5rem;
   display: flex;

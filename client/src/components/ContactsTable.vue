@@ -16,9 +16,9 @@
           <td>{{ contact.last_name }}</td>
           <td>{{ contact.email }}</td>
           <td>{{ contact.phone }}</td>
-          <td>
-            <button class="btn edit" @click="$emit('edit', contact)">✏️ ערוך</button>
-            <button class="btn delete" @click="$emit('delete', contact.id)">🗑️ מחק</button>
+          <td class="action-buttons">
+            <button class="button button-secondary" @click="$emit('edit', contact)">✏️ ערוך</button>
+            <button class="button button-danger" @click="$emit('delete', contact.id)">🗑️ מחק</button>
           </td>
         </tr>
       </tbody>
@@ -31,3 +31,42 @@ export default {
   props: ['contacts']
 }
 </script>
+
+<style scoped>
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  direction: rtl;
+}
+
+.contacts-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* ריווח בין שורות */
+  font-family: var(--font-base);
+  color: var(--color-text);
+}
+
+.contacts-table th,
+.contacts-table td {
+  padding: 12px 16px;
+  text-align: right;
+  background-color: var(--color-background-soft);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.contacts-table th {
+  background-color: var(--color-background-mute);
+  color: var(--color-heading);
+  font-weight: bold;
+}
+
+.contacts-table tbody tr:hover {
+  background-color: var(--color-background-mute);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+</style>
